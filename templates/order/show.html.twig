@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% block title %}Commande #{{ order.id }} - SymPet{% endblock %}
+
+{% block body %}
+<div class="sp-page-header">
+    <div class="container">
+        <h1>Commande #{{ order.id }}</h1>
+        <p>{{ order.dateCommande|date('d/m/Y à H:i') }}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <a href="{{ path('order_history') }}" class="btn btn-outline-primary mb-4">
+        <i class="bi bi-arrow-left me-1"></i>Mes commandes
+    </a>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="sp-card" style="padding:1.5rem;margin-bottom:1.2rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+                    <h5 style="font-weight:900;color:#1a2332;margin:0;">Détail des articles</h5>
+                    <span class="status-pill status-{{ order.statut.value|replace({' ': '_'})|lower }}">
+                        {{ order.statut.value }}
+                    </span>
+                </div>
+                <div class="sp-table">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th style="text-align:center;">Quantité</th>
+                                <th style="text-align:right;">Prix unitaire</th>
+                                <th style="text-align:right;">Sous-total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for line in order.ligneCommandes %}
+                            <tr>
+                                <td style="font-weight:700;">{{ line.produit.nom|capitalize }}</td>
+                                <td style="text-align:center;">
+                                    <span style="background:#e8f5ee;color:#2d8a4e;border-radius:8px;padding:0.2rem 0.6rem;font-weight:800;font-size:0.85rem;">× {{ line.quantite }}</span>
+                                </td>
+                                <td style="text-align:right;color:#6b7280;font-weight:600;">{{ line.prixUnitaire|number_format(2, ',', ' ') }} DT</td>
+                                <td style="text-align:right;font-weight:800;color:#1a2332;">{{ line.sousTotale|number_format(2, ',', ' ') }} DT</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:1.2rem;gap:1rem;">
+                    <span style="font-weight:700;color:#6b7280;">Total de la commande</span>
+                    <span style="font-weight:900;color:#2d8a4e;font-size:1.4rem;">{{ order.total|number_format(2, ',', ' ') }} DT</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sp-card" style="padding:1.5rem;">
+                <h6 style="font-weight:900;color:#1a2332;margin-bottom:1rem;padding-bottom:0.8rem;border-bottom:1px solid #e2ece2;">Informations de livraison</h6>
+                <div style="display:flex;align-items:flex-start;gap:0.8rem;">
+                    <div style="background:#e8f5ee;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">📍</div>
+                    <div>
+                        <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Adresse</div>
+                        <div style="font-weight:600;color:#374151;font-size:0.9rem;line-height:1.5;">{{ order.adresseLivraison }}</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:0.8rem;margin-top:1.2rem;">
+                    <div style="background:#e8f5ee;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">📅</div>
+                    <div>
+                        <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Date de commande</div>
+                        <div style="font-weight:600;color:#374151;font-size:0.9rem;">{{ order.dateCommande|date('d/m/Y à H:i') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

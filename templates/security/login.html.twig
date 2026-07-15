@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block title %}Connexion - SymPet{% endblock %}
+
+{% block body %}
+<div style="min-height:80vh;display:flex;align-items:center;background:linear-gradient(135deg,#f0fdf4 0%,#fdf8f0 100%);padding:3rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+
+                <div class="text-center mb-4">
+                    <a href="{{ path('app_home') }}" style="font-family:'Pacifico',cursive;font-size:2rem;color:#2d8a4e;text-decoration:none;">🐾 SymPet</a>
+                    <h2 style="font-weight:900;color:#1a2332;margin-top:0.8rem;margin-bottom:0.3rem;font-size:1.5rem;">Bon retour !</h2>
+                    <p style="color:#6b7280;font-size:0.9rem;margin:0;">Connectez-vous pour accéder à votre compte</p>
+                </div>
+
+                <div class="sp-card" style="border-radius:20px;padding:2rem;">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="sp-flash alert alert-{{ label }} mb-3" style="border-radius:12px;border-left:4px solid;">{{ message }}</div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if error %}
+                        <div class="sp-flash alert alert-danger mb-3" style="border-radius:12px;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Adresse email</label>
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                                   class="form-control" placeholder="votre@email.com"
+                                   autocomplete="email" required autofocus>
+                        </div>
+                        <div class="mb-2">
+                            <label for="inputPassword" class="form-label">Mot de passe</label>
+                            <input type="password" name="password" id="inputPassword"
+                                   class="form-control" placeholder="••••••••"
+                                   autocomplete="current-password" required>
+                        </div>
+                        <div class="text-end mb-4">
+                            <a href="{{ path('app_forgot_password_request') }}" style="font-size:0.85rem;color:#2d8a4e;font-weight:700;text-decoration:none;">
+                                Mot de passe oublié ?
+                            </a>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="btn btn-primary w-100 py-3" type="submit" style="font-size:1rem;border-radius:14px;">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                        </button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-3">
+                    <span style="color:#6b7280;font-size:0.9rem;font-weight:600;">Pas encore de compte ?</span>
+                    <a href="{{ path('app_register') }}" style="color:#2d8a4e;font-weight:800;text-decoration:none;margin-left:0.4rem;">Créer un compte →</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

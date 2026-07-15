@@ -1,0 +1,66 @@
+{% extends 'produit/base_admin.html.twig' %}
+
+{% block title %}{{ produit.nom|capitalize }} - Admin SymPet{% endblock %}
+
+{% block body %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="admin-title mb-0"><i class="bi bi-box-seam me-2"></i>{{ produit.nom|capitalize }}</h2>
+    <div class="d-flex gap-2">
+        <a href="{{ path('produit_index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+        <a href="{{ path('produit_edit', {'id': produit.id}) }}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Modifier</a>
+        <form method="post" action="{{ path('produit_delete', {'id': produit.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer ce produit ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ produit.id) }}">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Supprimer</button>
+        </form>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{ produit.image }}" class="img-fluid rounded-start w-100 h-100" style="object-fit:cover; min-height:350px;" alt="{{ produit.nom }}">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body p-4">
+                <table class="table table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th class="table-light" style="width:150px">Nom</th>
+                            <td class="fw-semibold">{{ produit.nom|capitalize }}</td>
+                        </tr>
+                        <tr>
+                            <th class="table-light">Catégorie</th>
+                            <td><span class="badge bg-primary">{{ produit.categorie.nom }}</span></td>
+                        </tr>
+                        <tr>
+                            <th class="table-light">Prix</th>
+                            <td class="fw-bold text-primary fs-5">{{ produit.prix }} DT</td>
+                        </tr>
+                        <tr>
+                            <th class="table-light">Stock</th>
+                            <td>
+                                {% if produit.stock == 0 %}
+                                    <span class="badge bg-danger">Rupture de stock</span>
+                                {% elseif produit.stock < 5 %}
+                                    <span class="badge bg-warning text-dark">{{ produit.stock }} unités (faible)</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ produit.stock }} en stock</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="table-light">Description</th>
+                            <td>{{ produit.description }}</td>
+                        </tr>
+                        <tr>
+                            <th class="table-light">Image URL</th>
+                            <td class="text-muted small text-break">{{ produit.image }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

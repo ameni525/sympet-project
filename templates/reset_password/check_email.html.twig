@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérifiez vos emails - SymPet{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg text-center" style="width: 100%; max-width: 450px;">
+        <div class="card-header bg-secondary text-white">
+            <h3 class="mb-0">📧 Email envoyé</h3>
+        </div>
+        <div class="card-body">
+            <p>Si un compte correspond à <strong>{{ app.request.get('email') }}</strong>, nous venons de vous envoyer un lien de réinitialisation.</p>
+            <p>Vérifiez vos spams si vous ne le recevez pas dans les minutes suivantes.</p>
+            <a href="{{ path('app_login') }}" class="btn btn-outline-secondary">Retour à la connexion</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

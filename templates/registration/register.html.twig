@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inscription - SymPet{% endblock %}
+
+{% block body %}
+<div style="min-height:80vh;display:flex;align-items:center;background:linear-gradient(135deg,#f0fdf4 0%,#fdf8f0 100%);padding:3rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="text-center mb-4">
+                    <a href="{{ path('app_home') }}" style="font-family:'Pacifico',cursive;font-size:2rem;color:#2d8a4e;text-decoration:none;">🐾 SymPet</a>
+                    <h2 style="font-weight:900;color:#1a2332;margin-top:0.8rem;margin-bottom:0.3rem;font-size:1.5rem;">Rejoignez la famille SymPet !</h2>
+                    <p style="color:#6b7280;font-size:0.9rem;margin:0;">Créez votre compte et commencez à gâter vos animaux</p>
+                </div>
+
+                <div class="sp-card" style="border-radius:20px;padding:2rem;">
+                    {{ form_start(registrationForm, {'attr': {'class': 'needs-validation'}}) }}
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                {{ form_label(registrationForm.nom) }}
+                                {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control', 'placeholder': 'Dupont'}}) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_label(registrationForm.prenom) }}
+                                {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Marie'}}) }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.email) }}
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'votre@email.com'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword) }}
+                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Minimum 6 caractères'}}) }}
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label', 'style': 'font-size:0.88rem;color:#6b7280;'}}) }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3" style="font-size:1rem;border-radius:14px;">
+                            <i class="bi bi-person-plus me-2"></i>Créer mon compte
+                        </button>
+                    {{ form_end(registrationForm) }}
+                </div>
+
+                <div class="text-center mt-3">
+                    <span style="color:#6b7280;font-size:0.9rem;font-weight:600;">Déjà inscrit ?</span>
+                    <a href="{{ path('app_login') }}" style="color:#2d8a4e;font-weight:800;text-decoration:none;margin-left:0.4rem;">Se connecter →</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dashboard Admin - SymPet{% endblock %}
+
+{% block body %}
+<div style="background:linear-gradient(135deg,#1e293b 0%,#1a2332 100%);color:white;padding:2.5rem 0 2rem;position:relative;overflow:hidden;">
+    <div style="position:absolute;right:-40px;bottom:-30px;font-size:200px;opacity:0.04;pointer-events:none;">⚙️</div>
+    <div class="container">
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="background:rgba(255,255,255,0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🛡️</div>
+            <div>
+                <h1 style="font-weight:900;font-size:1.8rem;margin:0;">Espace Administrateur</h1>
+                <p style="opacity:0.7;margin:0;font-size:0.9rem;">Vue d'ensemble de SymPet</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+
+    {# ─── KPI CARDS ─── #}
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div style="background:white;border-radius:18px;padding:1.5rem;border:1px solid #e2ece2;box-shadow:0 4px 16px rgba(45,138,78,0.07);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+                    <span style="font-size:0.78rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;">Produits</span>
+                    <div style="background:#e8f5ee;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">📦</div>
+                </div>
+                <div style="font-size:2.2rem;font-weight:900;color:#1a2332;line-height:1;">{{ productsCount }}</div>
+                <a href="{{ path('produit_index') }}" style="font-size:0.8rem;color:#2d8a4e;font-weight:700;text-decoration:none;">Gérer →</a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div style="background:white;border-radius:18px;padding:1.5rem;border:1px solid #e2ece2;box-shadow:0 4px 16px rgba(45,138,78,0.07);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+                    <span style="font-size:0.78rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;">Clients</span>
+                    <div style="background:#eff6ff;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👥</div>
+                </div>
+                <div style="font-size:2.2rem;font-weight:900;color:#1a2332;line-height:1;">{{ usersCount }}</div>
+                <a href="{{ path('admin_users') }}" style="font-size:0.8rem;color:#3b82f6;font-weight:700;text-decoration:none;">Gérer →</a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div style="background:white;border-radius:18px;padding:1.5rem;border:1px solid #e2ece2;box-shadow:0 4px 16px rgba(45,138,78,0.07);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+                    <span style="font-size:0.78rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;">Commandes</span>
+                    <div style="background:#fef3c7;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🛒</div>
+                </div>
+                <div style="font-size:2.2rem;font-weight:900;color:#1a2332;line-height:1;">{{ ordersCount }}</div>
+                <a href="{{ path('admin_orders') }}" style="font-size:0.8rem;color:#f59e0b;font-weight:700;text-decoration:none;">Voir →</a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div style="background:linear-gradient(135deg,#2d8a4e,#1e6b3b);border-radius:18px;padding:1.5rem;color:white;box-shadow:0 6px 20px rgba(45,138,78,0.3);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+                    <span style="font-size:0.78rem;font-weight:800;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;">Chiffre d'affaires</span>
+                    <div style="background:rgba(255,255,255,0.15);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">💰</div>
+                </div>
+                <div style="font-size:1.7rem;font-weight:900;line-height:1;">{{ revenue|number_format(2, ',', ' ') }} DT</div>
+                <div style="font-size:0.8rem;opacity:0.75;margin-top:0.3rem;font-weight:600;">Total cumulé</div>
+            </div>
+        </div>
+    </div>
+
+    {# ─── QUICK ACTIONS ─── #}
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <h5 class="sp-section-title mb-4">Actions rapides</h5>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a href="{{ path('produit_new') }}" style="display:flex;align-items:center;gap:0.8rem;background:white;border-radius:14px;padding:1rem 1.2rem;border:1px solid #e2ece2;text-decoration:none;transition:all 0.2s;color:#1a2332;font-weight:700;font-size:0.9rem;"
+               onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.15)'"
+               onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <span style="font-size:1.4rem;">➕</span>Nouveau produit
+            </a>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a href="{{ path('admin_orders') }}" style="display:flex;align-items:center;gap:0.8rem;background:white;border-radius:14px;padding:1rem 1.2rem;border:1px solid #e2ece2;text-decoration:none;transition:all 0.2s;color:#1a2332;font-weight:700;font-size:0.9rem;"
+               onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.15)'"
+               onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <span style="font-size:1.4rem;">📋</span>Voir les commandes
+            </a>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a href="{{ path('admin_users') }}" style="display:flex;align-items:center;gap:0.8rem;background:white;border-radius:14px;padding:1rem 1.2rem;border:1px solid #e2ece2;text-decoration:none;transition:all 0.2s;color:#1a2332;font-weight:700;font-size:0.9rem;"
+               onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.15)'"
+               onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <span style="font-size:1.4rem;">👥</span>Gérer clients
+            </a>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a href="{{ path('produit_index') }}" style="display:flex;align-items:center;gap:0.8rem;background:white;border-radius:14px;padding:1rem 1.2rem;border:1px solid #e2ece2;text-decoration:none;transition:all 0.2s;color:#1a2332;font-weight:700;font-size:0.9rem;"
+               onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.15)'"
+               onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <span style="font-size:1.4rem;">📦</span>Catalogue produits
+            </a>
+        </div>
+    </div>
+
+    {# ─── CHART ─── #}
+    <div style="background:white;border-radius:20px;padding:1.8rem;border:1px solid #e2ece2;box-shadow:0 4px 16px rgba(45,138,78,0.06);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h5 style="font-weight:900;color:#1a2332;margin:0;font-size:1.1rem;">📈 Chiffre d'affaires mensuel</h5>
+            <span style="background:#e8f5ee;color:#2d8a4e;border-radius:20px;padding:0.3rem 0.9rem;font-size:0.78rem;font-weight:800;">12 derniers mois</span>
+        </div>
+        <canvas id="revenueChart" height="90"></canvas>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = {{ chartLabels|json_encode|raw }};
+const values = {{ chartValues|json_encode|raw }};
+new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+        labels,
+        datasets: [{
+            label: 'CA (DT)',
+            data: values,
+            borderColor: '#2d8a4e',
+            backgroundColor: 'rgba(45,138,78,0.08)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#2d8a4e',
+            pointRadius: 5,
+            pointHoverRadius: 8,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#1a2332',
+                padding: 10,
+                callbacks: { label: ctx => ` ${ctx.raw.toFixed(2)} DT` }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#f0f4f0' },
+                ticks: { font: { family: 'Nunito', weight: '700' }, color: '#6b7280' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { family: 'Nunito', weight: '700' }, color: '#6b7280' }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

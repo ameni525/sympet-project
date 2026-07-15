@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon panier - SymPet{% endblock %}
+
+{% block body %}
+<div class="sp-page-header">
+    <div class="container">
+        <h1><i class="bi bi-cart3 me-2"></i>Mon Panier</h1>
+        <p>{% if items is not empty %}{{ items|length }} article(s) dans votre panier{% else %}Votre panier est vide{% endif %}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    {% if items is empty %}
+        <div class="text-center py-5">
+            <div style="font-size:6rem;margin-bottom:1rem;">🛒</div>
+            <h3 style="font-weight:900;color:#1a2332;margin-bottom:0.5rem;">Votre panier est vide</h3>
+            <p class="text-muted mb-4">Ajoutez des produits pour commencer vos achats !</p>
+            <a href="{{ path('product_index') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-bag me-2"></i>Découvrir nos produits
+            </a>
+        </div>
+    {% else %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="sp-card">
+                    <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #e2ece2;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:800;color:#1a2332;font-size:1rem;">Articles ({{ items|length }})</span>
+                        <a href="{{ path('cart_clear') }}" style="color:#dc2626;font-size:0.85rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">
+                            <i class="bi bi-trash3"></i>Vider le panier
+                        </a>
+                    </div>
+                    {% for item in items %}
+                    <div style="padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;{% if not loop.last %}border-bottom:1px solid #f0f4f0;{% endif %}">
+                        <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;flex-shrink:0;border:1px solid #e2ece2;">
+                            <img src="{{ item.product.image }}" style="width:100%;height:100%;object-fit:cover;" alt="{{ item.product.nom }}">
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-weight:800;color:#1a2332;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                {{ item.product.nom|capitalize }}
+                            </div>
+                            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">{{ item.product.categorie.nom }}</div>
+                            <div style="font-weight:800;color:#2d8a4e;margin-top:0.3rem;">{{ item.product.prix }} DT / unité</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.4rem;background:#f0fdf4;border-radius:12px;padding:0.4rem 0.6rem;border:1px solid #c3e6ce;">
+                            <a href="{{ path('cart_decrease', {id: item.product.id}) }}"
+                               style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:white;border:1px solid #c3e6ce;color:#1a2332;text-decoration:none;font-weight:900;font-size:1rem;transition:all 0.2s;"
+                               onmouseover="this.style.background='#e2ece2'" onmouseout="this.style.background='white'">−</a>
+                            <span style="font-weight:900;font-size:1rem;min-width:24px;text-align:center;color:#1a2332;">{{ item.quantity }}</span>
+                            <a href="{{ path('cart_add', {id: item.product.id}) }}"
+                               style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#2d8a4e;color:white;text-decoration:none;font-weight:900;font-size:1rem;transition:all 0.2s;"
+                               onmouseover="this.style.background='#1e6b3b'" onmouseout="this.style.background='#2d8a4e'">+</a>
+                        </div>
+                        <div style="font-weight:900;color:#1a2332;font-size:1rem;min-width:80px;text-align:right;">
+                            {{ item.line_total|number_format(2, ',', ' ') }} DT
+                        </div>
+                        <a href="{{ path('cart_remove', {id: item.product.id}) }}"
+                           style="color:#dc2626;text-decoration:none;font-size:1.1rem;flex-shrink:0;"
+                           title="Supprimer">
+                            <i class="bi bi-x-circle"></i>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{{ path('product_index') }}" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:1.2rem;color:#2d8a4e;font-weight:700;text-decoration:none;font-size:0.92rem;">
+                    <i class="bi bi-arrow-left"></i>Continuer mes achats
+                </a>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sp-card" style="position:sticky;top:80px;">
+                    <div style="padding:1.5rem;border-bottom:1px solid #e2ece2;">
+                        <h5 style="font-weight:900;color:#1a2332;margin:0;">Résumé de commande</h5>
+                    </div>
+                    <div style="padding:1.5rem;">
+                        {% for item in items %}
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.7rem;font-size:0.88rem;">
+                            <span style="color:#6b7280;font-weight:600;">{{ item.product.nom|slice(0,22) }}{% if item.product.nom|length > 22 %}…{% endif %} ×{{ item.quantity }}</span>
+                            <span style="font-weight:700;color:#1a2332;">{{ item.line_total|number_format(2, ',', ' ') }} DT</span>
+                        </div>
+                        {% endfor %}
+
+                        <div style="border-top:2px dashed #e2ece2;margin:1rem 0;padding-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:800;color:#1a2332;font-size:1rem;">Total</span>
+                                <span style="font-weight:900;color:#2d8a4e;font-size:1.4rem;">{{ total|number_format(2, ',', ' ') }} DT</span>
+                            </div>
+                        </div>
+
+                        <a href="{{ path('order_checkout') }}"
+                           style="display:flex;align-items:center;justify-content:center;gap:0.6rem;background:linear-gradient(135deg,#2d8a4e,#1e6b3b);color:white;border-radius:14px;padding:0.95rem;font-weight:900;font-size:1rem;text-decoration:none;transition:all 0.25s;width:100%;margin-top:0.5rem;"
+                           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.4)'"
+                           onmouseout="this.style.transform='';this.style.boxShadow=''">
+                            <i class="bi bi-credit-card"></i>Commander maintenant
+                        </a>
+
+                        <div style="display:flex;justify-content:center;gap:1.2rem;margin-top:1rem;">
+                            <span style="font-size:0.75rem;color:#9ca3af;font-weight:600;display:flex;align-items:center;gap:0.2rem;">
+                                <i class="bi bi-shield-check" style="color:#2d8a4e;"></i>Paiement sécurisé
+                            </span>
+                            <span style="font-size:0.75rem;color:#9ca3af;font-weight:600;display:flex;align-items:center;gap:0.2rem;">
+                                <i class="bi bi-truck" style="color:#2d8a4e;"></i>Livraison rapide
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

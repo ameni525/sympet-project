@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ product.nom|capitalize }} - SymPet{% endblock %}
+
+{% block body %}
+<div style="background:#f0fdf4;border-bottom:1px solid #c3e6ce;padding:0.8rem 0;">
+    <div class="container">
+        <nav style="font-size:0.85rem;font-weight:600;color:#6b7280;">
+            <a href="{{ path('app_home') }}" style="color:#6b7280;text-decoration:none;">Accueil</a>
+            <span class="mx-2">›</span>
+            <a href="{{ path('product_index') }}" style="color:#6b7280;text-decoration:none;">Produits</a>
+            <span class="mx-2">›</span>
+            <span style="color:#2d8a4e;">{{ product.nom|capitalize }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-5">
+    <a href="{{ path('product_index') }}" class="btn btn-outline-primary mb-4" style="font-weight:700;">
+        <i class="bi bi-arrow-left me-1"></i>Retour aux produits
+    </a>
+
+    <div class="sp-card" style="border-radius:24px;">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div style="position:relative;height:100%;min-height:420px;overflow:hidden;border-radius:24px 0 0 24px;">
+                    <img src="{{ product.image }}"
+                         style="width:100%;height:100%;object-fit:cover;min-height:420px;"
+                         alt="{{ product.nom }}">
+                    <div style="position:absolute;top:16px;left:16px;">
+                        <span class="sp-badge-cat">{{ product.categorie.nom }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="padding:3rem;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                    <h1 style="font-weight:900;font-size:1.9rem;color:#1a2332;margin-bottom:0.6rem;">
+                        {{ product.nom|capitalize }}
+                    </h1>
+                    <p style="color:#6b7280;font-size:0.95rem;line-height:1.7;margin-bottom:1.5rem;">
+                        {{ product.description }}
+                    </p>
+
+                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                        <span class="sp-price">{{ product.prix }} DT</span>
+                        {% if product.stock > 0 %}
+                            <span class="sp-badge-ok">
+                                <i class="bi bi-check-circle me-1"></i>{{ product.stock }} en stock
+                            </span>
+                        {% else %}
+                            <span class="sp-badge-out">
+                                <i class="bi bi-x-circle me-1"></i>Rupture de stock
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div style="background:#f0fdf4;border-radius:14px;padding:1rem 1.2rem;margin-bottom:1.8rem;border:1px solid #c3e6ce;">
+                        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                            <div>
+                                <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Catégorie</div>
+                                <div style="font-weight:800;color:#1a2332;font-size:0.9rem;margin-top:0.2rem;">{{ product.categorie.nom }}</div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Disponibilité</div>
+                                <div style="font-weight:800;color:{% if product.stock > 0 %}#166534{% else %}#991b1b{% endif %};font-size:0.9rem;margin-top:0.2rem;">
+                                    {% if product.stock > 0 %}Disponible{% else %}Indisponible{% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Stock</div>
+                                <div style="font-weight:800;color:#1a2332;font-size:0.9rem;margin-top:0.2rem;">{{ product.stock }} unités</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if product.stock > 0 %}
+                        <a href="{{ path('cart_add', {id: product.id}) }}"
+                           style="display:inline-flex;align-items:center;justify-content:center;gap:0.6rem;background:linear-gradient(135deg,#2d8a4e,#1e6b3b);color:white;border-radius:14px;padding:1rem 2rem;font-weight:900;font-size:1.05rem;text-decoration:none;transition:all 0.25s;width:100%;"
+                           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(45,138,78,0.4)'"
+                           onmouseout="this.style.transform='';this.style.boxShadow=''">
+                            <i class="bi bi-cart-plus" style="font-size:1.2rem;"></i>
+                            Ajouter au panier
+                        </a>
+                    {% else %}
+                        <button disabled style="display:flex;align-items:center;justify-content:center;gap:0.6rem;background:#e5e7eb;color:#9ca3af;border:none;border-radius:14px;padding:1rem 2rem;font-weight:900;font-size:1.05rem;width:100%;cursor:not-allowed;">
+                            <i class="bi bi-cart-x" style="font-size:1.2rem;"></i>
+                            Produit indisponible
+                        </button>
+                    {% endif %}
+
+                    <div style="display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;">
+                        <span style="font-size:0.82rem;color:#6b7280;font-weight:600;display:flex;align-items:center;gap:0.3rem;">
+                            <i class="bi bi-truck" style="color:#2d8a4e;"></i>Livraison rapide
+                        </span>
+                        <span style="font-size:0.82rem;color:#6b7280;font-weight:600;display:flex;align-items:center;gap:0.3rem;">
+                            <i class="bi bi-shield-check" style="color:#2d8a4e;"></i>Paiement sécurisé
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

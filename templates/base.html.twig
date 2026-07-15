@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SymPet{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --sp-green: #2d8a4e;
+            --sp-green-dark: #1e6b3b;
+            --sp-green-light: #e8f5ee;
+            --sp-orange: #f97316;
+            --sp-orange-light: #fff3e8;
+            --sp-yellow: #fbbf24;
+            --sp-cream: #fdf8f0;
+            --sp-dark: #1a2332;
+            --sp-gray: #6b7280;
+            --sp-border: #e2ece2;
+            --sp-white: #ffffff;
+            --sp-card-shadow: 0 4px 20px rgba(45,138,78,0.08);
+            --sp-card-shadow-hover: 0 12px 40px rgba(45,138,78,0.2);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Nunito', sans-serif; background-color: var(--sp-cream); color: var(--sp-dark); margin: 0; }
+
+        /* NAVBAR */
+        .sp-navbar { background: var(--sp-white); border-bottom: 2px solid var(--sp-border); box-shadow: 0 2px 16px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 1000; }
+        .sp-brand { font-family: 'Pacifico', cursive; font-size: 1.75rem; color: var(--sp-green) !important; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; }
+        .sp-brand .paw { display: inline-block; animation: wobble 3s ease-in-out infinite; }
+        @keyframes wobble { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
+        .sp-nav-link { color: var(--sp-dark) !important; font-weight: 700; font-size: 0.95rem; padding: 0.45rem 0.9rem !important; border-radius: 10px; transition: all 0.2s; text-decoration: none; }
+        .sp-nav-link:hover { color: var(--sp-green) !important; background: var(--sp-green-light); }
+        .sp-nav-link.admin-link { color: var(--sp-orange) !important; }
+        .sp-nav-link.admin-link:hover { background: var(--sp-orange-light); color: var(--sp-orange) !important; }
+
+        .sp-btn-cart { background: var(--sp-orange-light); color: var(--sp-orange); border: 2px solid #fed7aa; border-radius: 14px; font-weight: 800; padding: 0.45rem 1.1rem; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none; transition: all 0.2s; position: relative; }
+        .sp-btn-cart:hover { background: var(--sp-orange); color: white; border-color: var(--sp-orange); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(249,115,22,0.3); }
+        .cart-badge { position: absolute; top: -9px; right: -9px; background: var(--sp-orange); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.68rem; font-weight: 900; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        .sp-btn-green { background: linear-gradient(135deg, var(--sp-green), var(--sp-green-dark)); color: white; border: none; border-radius: 12px; font-weight: 800; padding: 0.5rem 1.3rem; font-size: 0.92rem; text-decoration: none; transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .sp-btn-green:hover { color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,138,78,0.35); }
+        .sp-btn-logout { background: transparent; color: #dc2626; border: 2px solid #fecaca; border-radius: 12px; font-weight: 700; padding: 0.45rem 1rem; font-size: 0.92rem; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.3rem; }
+        .sp-btn-logout:hover { background: #dc2626; color: white; border-color: #dc2626; }
+
+        /* FLASH */
+        .sp-flash { border-radius: 0; border: none; border-left: 5px solid; padding: 0.85rem 1.5rem; font-weight: 700; margin: 0; }
+        .sp-flash.alert-success { background: #f0fdf4; border-color: var(--sp-green); color: #166534; }
+        .sp-flash.alert-danger  { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+        .sp-flash.alert-warning { background: #fffbeb; border-color: var(--sp-yellow); color: #92400e; }
+        .sp-flash.alert-info    { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+
+        /* CARDS */
+        .sp-card { background: var(--sp-white); border-radius: 18px; border: 1px solid var(--sp-border); box-shadow: var(--sp-card-shadow); overflow: hidden; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        .sp-card:hover { box-shadow: var(--sp-card-shadow-hover); transform: translateY(-5px); }
+
+        /* PAGE HEADER */
+        .sp-page-header { background: linear-gradient(135deg, var(--sp-green) 0%, var(--sp-green-dark) 100%); color: white; padding: 2.5rem 0 2rem; position: relative; overflow: hidden; }
+        .sp-page-header::before { content:'🐾'; position:absolute; font-size:9rem; opacity:0.08; right:4%; top:50%; transform:translateY(-50%); pointer-events:none; }
+        .sp-page-header h1 { font-weight: 900; font-size: 2rem; margin: 0; }
+        .sp-page-header p { opacity: 0.85; margin-top: 0.5rem; margin-bottom: 0; }
+
+        /* SECTION TITLE */
+        .sp-section-title { font-weight: 900; font-size: 1.5rem; color: var(--sp-dark); position: relative; padding-bottom: 0.6rem; display: inline-block; }
+        .sp-section-title::after { content:''; position:absolute; bottom:0; left:0; width:44px; height:4px; background:linear-gradient(90deg, var(--sp-green), var(--sp-orange)); border-radius:2px; }
+
+        /* BADGE */
+        .sp-badge-cat { background:var(--sp-green-light); color:var(--sp-green-dark); border-radius:20px; font-size:0.72rem; font-weight:800; padding:0.28em 0.8em; text-transform:uppercase; letter-spacing:0.04em; }
+        .sp-badge-ok  { background:#dcfce7; color:#166534; border-radius:20px; font-size:0.8rem; font-weight:700; padding:0.3em 0.8em; }
+        .sp-badge-out { background:#fee2e2; color:#991b1b; border-radius:20px; font-size:0.8rem; font-weight:700; padding:0.3em 0.8em; }
+
+        /* PRICE */
+        .sp-price { font-size:1.5rem; font-weight:900; color:var(--sp-green); }
+
+        /* TABLE */
+        .sp-table { border-radius:16px; overflow:hidden; border:1px solid var(--sp-border); }
+        .sp-table thead th { background:var(--sp-green-light); color:var(--sp-green-dark); font-weight:800; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; border:none; padding:0.9rem 1.2rem; }
+        .sp-table tbody td { border-color:var(--sp-border); padding:0.9rem 1.2rem; vertical-align:middle; font-weight:500; }
+        .sp-table tbody tr:hover { background:#fafdf8; }
+
+        /* FORM OVERRIDES */
+        .btn-primary { background:linear-gradient(135deg, var(--sp-green), var(--sp-green-dark)) !important; border:none !important; border-radius:12px !important; font-weight:800 !important; font-family:'Nunito',sans-serif !important; transition:all 0.25s !important; }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(45,138,78,0.35) !important; }
+        .btn-outline-primary { color:var(--sp-green) !important; border:2px solid var(--sp-green) !important; border-radius:12px !important; font-weight:800 !important; }
+        .btn-outline-primary:hover { background:var(--sp-green) !important; color:white !important; }
+        .btn-outline-danger { border-radius:12px !important; font-weight:700 !important; }
+        .btn-outline-secondary { border-radius:10px !important; font-weight:700 !important; }
+        .form-control, .form-select { border-radius:12px !important; border:2px solid var(--sp-border) !important; font-family:'Nunito',sans-serif !important; font-weight:600 !important; padding:0.6rem 1rem !important; }
+        .form-control:focus, .form-select:focus { border-color:var(--sp-green) !important; box-shadow:0 0 0 4px rgba(45,138,78,0.12) !important; }
+        .form-label { font-weight:700; font-size:0.9rem; color:var(--sp-dark); }
+        .pagination .page-link { border-radius:10px !important; margin:0 3px; color:var(--sp-green); font-weight:800; border:2px solid var(--sp-border); }
+        .pagination .page-item.active .page-link { background:var(--sp-green); border-color:var(--sp-green); }
+
+        /* STATUS */
+        .status-pill { border-radius:20px; font-size:0.78rem; font-weight:800; padding:0.3em 0.85em; }
+        .status-en_attente, .status-pending { background:#fef3c7; color:#92400e; }
+        .status-payee, .status-paid { background:#d1fae5; color:#065f46; }
+        .status-expediee { background:#dbeafe; color:#1e40af; }
+        .status-livree, .status-done { background:#ede9fe; color:#4c1d95; }
+        .status-annulee { background:#fee2e2; color:#991b1b; }
+
+        /* FOOTER */
+        .sp-footer { background:var(--sp-dark); color:#9ca3af; padding:3rem 0 1.5rem; margin-top:5rem; }
+        .sp-footer-brand { font-family:'Pacifico',cursive; font-size:1.8rem; color:var(--sp-white); }
+        .sp-footer a { color:#9ca3af; text-decoration:none; transition:color 0.2s; }
+        .sp-footer a:hover { color:var(--sp-green); }
+        .sp-footer-divider { border-color:#374151; margin:1.5rem 0; }
+        .sp-footer .footer-icon { color:var(--sp-green); }
+    </style>
+</head>
+<body>
+
+{% set cartCount = 0 %}
+{% for qty in app.session.get('cart_items', []) %}
+    {% set cartCount = cartCount + qty %}
+{% endfor %}
+
+<nav class="sp-navbar">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+        <a class="sp-brand" href="{{ path('app_home') }}">
+            <span class="paw">🐾</span> SymPet
+        </a>
+
+        <button class="navbar-toggler border-0 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <i class="bi bi-list fs-3 text-dark"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav mx-auto gap-1 mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="sp-nav-link" href="{{ path('product_index') }}">
+                        <i class="bi bi-grid-3x3-gap me-1"></i>Produits
+                    </a>
+                </li>
+                {% if app.user %}
+                <li class="nav-item">
+                    <a class="sp-nav-link" href="{{ path('order_history') }}">
+                        <i class="bi bi-bag-check me-1"></i>Mes commandes
+                    </a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="sp-nav-link admin-link" href="{{ path('admin_dashboard') }}">
+                        <i class="bi bi-speedometer2 me-1"></i>Admin
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <a href="{{ path('cart_index') }}" class="sp-btn-cart">
+                    <i class="bi bi-cart3"></i>
+                    <span>Panier</span>
+                    {% if cartCount > 0 %}<span class="cart-badge">{{ cartCount }}</span>{% endif %}
+                </a>
+                {% if app.user %}
+                    <a href="{{ path('app_logout') }}" class="sp-btn-logout">
+                        <i class="bi bi-box-arrow-right"></i>Déconnexion
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="sp-btn-green">
+                        <i class="bi bi-person"></i>Connexion
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="sp-flash alert alert-{{ type == 'error' ? 'danger' : type }}">
+            <i class="bi bi-{% if type == 'success' %}check-circle-fill{% elseif type == 'danger' or type == 'error' %}exclamation-triangle-fill{% elseif type == 'warning' %}exclamation-circle-fill{% else %}info-circle-fill{% endif %} me-2"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{% block body %}{% endblock %}
+
+<footer class="sp-footer">
+    <div class="container">
+        <div class="row g-4 mb-2">
+            <div class="col-lg-4 col-md-6">
+                <div class="sp-footer-brand mb-2">🐾 SymPet</div>
+                <p class="small mb-0">La boutique en ligne dédiée au bonheur de vos animaux. Nourriture premium et accessoires pour chiens, chats et plus encore.</p>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="text-white fw-800 mb-3 text-uppercase" style="font-size:0.8rem;letter-spacing:0.08em;">Navigation</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="{{ path('app_home') }}"><i class="bi bi-house me-2 footer-icon"></i>Accueil</a></li>
+                    <li class="mb-2"><a href="{{ path('product_index') }}"><i class="bi bi-bag me-2 footer-icon"></i>Nos produits</a></li>
+                    {% if app.user %}
+                    <li class="mb-2"><a href="{{ path('order_history') }}"><i class="bi bi-clock-history me-2 footer-icon"></i>Mes commandes</a></li>
+                    <li class="mb-2"><a href="{{ path('cart_index') }}"><i class="bi bi-cart me-2 footer-icon"></i>Mon panier</a></li>
+                    {% else %}
+                    <li class="mb-2"><a href="{{ path('app_login') }}"><i class="bi bi-person me-2 footer-icon"></i>Connexion</a></li>
+                    <li class="mb-2"><a href="{{ path('app_register') }}"><i class="bi bi-person-plus me-2 footer-icon"></i>Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="text-white fw-800 mb-3 text-uppercase" style="font-size:0.8rem;letter-spacing:0.08em;">Nos engagements</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="bi bi-truck me-2 footer-icon"></i>Livraison rapide</li>
+                    <li class="mb-2"><i class="bi bi-shield-check me-2 footer-icon"></i>Paiement 100% sécurisé</li>
+                    <li class="mb-2"><i class="bi bi-headset me-2 footer-icon"></i>Support client réactif</li>
+                    <li class="mb-2"><i class="bi bi-patch-check me-2 footer-icon"></i>Produits de qualité</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="sp-footer-divider">
+        <div class="text-center small">
+            © {{ "now"|date("Y") }} <strong style="color:white;">SymPet</strong> — Tous droits réservés. Fait avec 💚 pour vos animaux.
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_scripts %}{% endblock %}
+
+
+
+
+
+
+
+
+
+
+{# ═══════════════════════════════════════════
+   PETBOT — Chatbot widget SymPet
+   Coller juste avant </body> dans base.html.twig
+   ═══════════════════════════════════════════ #}
+
+{# ─── BUBBLE BUTTON ─── #}
+<button id="chatbot-bubble" onclick="toggleChat()" title="Parler à PetBot"
+    style="position:fixed;bottom:24px;right:24px;z-index:9999;
+           width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
+           background:linear-gradient(135deg,#2d8a4e,#1e6b3b);
+           box-shadow:0 6px 24px rgba(45,138,78,0.45);
+           display:flex;align-items:center;justify-content:center;
+           font-size:1.6rem;transition:transform 0.25s,box-shadow 0.25s;">
+    🐾
+</button>
+
+{# ─── NOTIFICATION DOT ─── #}
+<span id="chat-notif"
+    style="position:fixed;bottom:72px;right:22px;z-index:10000;
+           background:#f97316;color:white;border-radius:50%;
+           width:18px;height:18px;font-size:0.65rem;font-weight:900;
+           display:flex;align-items:center;justify-content:center;
+           border:2px solid white;animation:pulse 2s infinite;">1</span>
+
+{# ─── CHAT WINDOW ─── #}
+<div id="chatbot-window"
+    style="display:none;position:fixed;bottom:96px;right:24px;z-index:9998;
+           width:360px;max-width:calc(100vw - 32px);
+           background:white;border-radius:20px;
+           box-shadow:0 20px 60px rgba(0,0,0,0.18);
+           font-family:'Nunito',sans-serif;overflow:hidden;
+           border:1px solid #e2ece2;
+           animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);">
+
+    {# Header #}
+    <div style="background:linear-gradient(135deg,#2d8a4e,#1e6b3b);
+                padding:1rem 1.2rem;display:flex;align-items:center;gap:0.8rem;">
+        <div style="width:42px;height:42px;background:rgba(255,255,255,0.15);
+                    border-radius:50%;display:flex;align-items:center;
+                    justify-content:center;font-size:1.3rem;flex-shrink:0;">🐾</div>
+        <div style="flex:1;">
+            <div style="color:white;font-weight:900;font-size:0.95rem;line-height:1.2;">PetBot</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:0.75rem;font-weight:600;
+                        display:flex;align-items:center;gap:0.3rem;">
+                <span style="width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block;"></span>
+                Assistant SymPet • En ligne
+            </div>
+        </div>
+        <button onclick="toggleChat()"
+            style="background:rgba(255,255,255,0.15);border:none;color:white;
+                   width:30px;height:30px;border-radius:50%;cursor:pointer;
+                   font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+
+    {# Messages area #}
+    <div id="chat-messages"
+        style="height:320px;overflow-y:auto;padding:1rem;
+               display:flex;flex-direction:column;gap:0.8rem;
+               background:#fdf8f0;">
+        {# Welcome message injected by JS #}
+    </div>
+
+    {# Quick suggestions #}
+    <div id="chat-suggestions"
+        style="padding:0.6rem 1rem;display:flex;gap:0.4rem;flex-wrap:wrap;
+               border-top:1px solid #e2ece2;background:white;">
+        <button onclick="sendSuggestion('Conseils pour mon chien 🐕')"
+            style="font-size:0.72rem;padding:0.3rem 0.7rem;border-radius:20px;border:1px solid #c3e6ce;
+                   background:#f0fdf4;color:#2d8a4e;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;">
+            🐕 Chien
+        </button>
+        <button onclick="sendSuggestion('Conseils pour mon chat 🐈')"
+            style="font-size:0.72rem;padding:0.3rem 0.7rem;border-radius:20px;border:1px solid #c3e6ce;
+                   background:#f0fdf4;color:#2d8a4e;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;">
+            🐈 Chat
+        </button>
+        <button onclick="sendSuggestion('Comment suivre ma commande ?')"
+            style="font-size:0.72rem;padding:0.3rem 0.7rem;border-radius:20px;border:1px solid #c3e6ce;
+                   background:#f0fdf4;color:#2d8a4e;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;">
+            📦 Commande
+        </button>
+        <button onclick="sendSuggestion('Quels produits recommandez-vous ?')"
+            style="font-size:0.72rem;padding:0.3rem 0.7rem;border-radius:20px;border:1px solid #c3e6ce;
+                   background:#f0fdf4;color:#2d8a4e;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;">
+            ⭐ Produits
+        </button>
+    </div>
+
+    {# Input #}
+    <div style="padding:0.8rem 1rem;border-top:1px solid #e2ece2;
+                display:flex;gap:0.5rem;background:white;">
+        <input id="chat-input" type="text"
+               placeholder="Posez votre question…"
+               onkeydown="if(event.key==='Enter')sendMessage()"
+               style="flex:1;border:2px solid #e2ece2;border-radius:12px;
+                      padding:0.6rem 0.9rem;font-size:0.88rem;font-family:'Nunito',sans-serif;
+                      font-weight:600;outline:none;transition:border-color 0.2s;"
+               onfocus="this.style.borderColor='#2d8a4e'"
+               onblur="this.style.borderColor='#e2ece2'">
+        <button onclick="sendMessage()"
+            style="background:linear-gradient(135deg,#2d8a4e,#1e6b3b);color:white;
+                   border:none;border-radius:12px;width:40px;height:40px;
+                   cursor:pointer;font-size:1rem;display:flex;align-items:center;
+                   justify-content:center;flex-shrink:0;transition:transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'">
+            ➤
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes slideUp {
+    from { opacity:0; transform:translateY(20px) scale(0.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes pulse {
+    0%,100% { transform:scale(1); }
+    50%      { transform:scale(1.2); }
+}
+@keyframes dotBounce {
+    0%,80%,100% { transform:translateY(0); }
+    40%          { transform:translateY(-6px); }
+}
+#chatbot-bubble:hover { transform:scale(1.1); box-shadow:0 8px 30px rgba(45,138,78,0.55); }
+#chat-messages::-webkit-scrollbar { width:4px; }
+#chat-messages::-webkit-scrollbar-track { background:transparent; }
+#chat-messages::-webkit-scrollbar-thumb { background:#c3e6ce; border-radius:2px; }
+</style>
+
+<script>
+const CHATBOT_ENDPOINT = '{{ path("chatbot_message") }}';
+let chatHistory = [];
+let chatOpen    = false;
+
+// ── Welcome message on first open ──
+function initChat() {
+    if (chatHistory.length === 0) {
+        appendMessage('bot',
+            '👋 Bonjour ! Je suis <strong>PetBot</strong>, votre assistant SymPet 🐾<br>' +
+            'Je suis là pour vous aider avec nos produits, conseils pour vos animaux, ou vos commandes.<br>' +
+            '<em style="font-size:0.82rem;color:#6b7280;">Comment puis-je vous aider aujourd\'hui ?</em>'
+        );
+    }
+}
+
+function toggleChat() {
+    chatOpen = !chatOpen;
+    const win   = document.getElementById('chatbot-window');
+    const notif = document.getElementById('chat-notif');
+    const btn   = document.getElementById('chatbot-bubble');
+
+    win.style.display = chatOpen ? 'flex' : 'none';
+    win.style.flexDirection = 'column';
+    notif.style.display = 'none';
+    btn.innerHTML = chatOpen ? '✕' : '🐾';
+    btn.style.fontSize = chatOpen ? '1.1rem' : '1.6rem';
+
+    if (chatOpen) {
+        initChat();
+        setTimeout(() => document.getElementById('chat-input').focus(), 100);
+        scrollToBottom();
+    }
+}
+
+function appendMessage(role, html) {
+    const box = document.getElementById('chat-messages');
+    const isBot = role === 'bot';
+    const div = document.createElement('div');
+    div.style.cssText = `
+        display:flex; align-items:flex-end; gap:0.5rem;
+        justify-content:${isBot ? 'flex-start' : 'flex-end'};
+    `;
+    div.innerHTML = isBot
+        ? `<div style="width:28px;height:28px;background:#e8f5ee;border-radius:50%;
+                       display:flex;align-items:center;justify-content:center;
+                       font-size:0.85rem;flex-shrink:0;">🐾</div>
+           <div style="max-width:78%;background:white;border-radius:16px 16px 16px 4px;
+                       padding:0.65rem 0.9rem;font-size:0.84rem;line-height:1.55;
+                       color:#1a2332;font-weight:500;border:1px solid #e2ece2;
+                       box-shadow:0 2px 8px rgba(0,0,0,0.06);">${html}</div>`
+        : `<div style="max-width:78%;background:linear-gradient(135deg,#2d8a4e,#1e6b3b);
+                       border-radius:16px 16px 4px 16px;padding:0.65rem 0.9rem;
+                       font-size:0.84rem;line-height:1.55;color:white;font-weight:600;">${html}</div>`;
+    box.appendChild(div);
+    scrollToBottom();
+}
+
+function showTyping() {
+    const box = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.id = 'typing-indicator';
+    div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;';
+    div.innerHTML = `
+        <div style="width:28px;height:28px;background:#e8f5ee;border-radius:50%;
+                    display:flex;align-items:center;justify-content:center;font-size:0.85rem;">🐾</div>
+        <div style="background:white;border-radius:16px 16px 16px 4px;padding:0.7rem 1rem;
+                    border:1px solid #e2ece2;display:flex;gap:4px;align-items:center;">
+            <span style="width:7px;height:7px;background:#c3e6ce;border-radius:50%;
+                         animation:dotBounce 1.2s ease infinite 0s;display:inline-block;"></span>
+            <span style="width:7px;height:7px;background:#c3e6ce;border-radius:50%;
+                         animation:dotBounce 1.2s ease infinite 0.2s;display:inline-block;"></span>
+            <span style="width:7px;height:7px;background:#c3e6ce;border-radius:50%;
+                         animation:dotBounce 1.2s ease infinite 0.4s;display:inline-block;"></span>
+        </div>`;
+    box.appendChild(div);
+    scrollToBottom();
+}
+
+function removeTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+}
+
+function scrollToBottom() {
+    const box = document.getElementById('chat-messages');
+    setTimeout(() => box.scrollTop = box.scrollHeight, 50);
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const text  = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    input.disabled = true;
+    appendMessage('user', text);
+
+    chatHistory.push({ role: 'user', content: text });
+    showTyping();
+
+    try {
+        const res = await fetch(CHATBOT_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: chatHistory })
+        });
+        const data = await res.json();
+        removeTyping();
+
+        const reply = data.reply || 'Désolé, une erreur est survenue. Réessayez.';
+        chatHistory.push({ role: 'assistant', content: reply });
+        appendMessage('bot', reply.replace(/\n/g, '<br>'));
+    } catch (e) {
+        removeTyping();
+        appendMessage('bot', '⚠️ Connexion impossible. Vérifiez votre connexion et réessayez.');
+    }
+
+    input.disabled = false;
+    input.focus();
+}
+
+function sendSuggestion(text) {
+    document.getElementById('chat-input').value = text;
+    sendMessage();
+    document.getElementById('chat-suggestions').style.display = 'none';
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
